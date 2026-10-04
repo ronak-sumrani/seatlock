@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./mvnw *)",
+      "Bash(docker compose *)",
+      "Bash(docker ps *)",
+      "Bash(docker logs *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(npm run *)",
+      "Bash(npx *)",
+      "Bash(k6 run *)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./**/secrets/**)",
+      "Bash(git push --force *)"
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+-- Baseline for schemas catalog and auth, both owned by user_catalog_user (created by
+-- deploy/postgres/init). Intentionally empty: it proves Flyway can run as the service role and
+-- records version 1. Tables arrive in V2+. Never edit an applied migration; add a new one.

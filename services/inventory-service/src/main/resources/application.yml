@@ -6,6 +6,23 @@ spring:
       # Blocking Spring MVC on virtual threads (spec §3): Tomcat runs each request on a virtual thread,
       # so blocking JDBC/HTTP calls park cheaply instead of tying up a platform thread.
       enabled: true
+  config:
+    # The repo-root .env is KEY=value, which is valid .properties. There are two paths because
+    # `spring-boot:run -pl` runs with the module directory as cwd, while `java -jar` from the
+    # root does not. Real environment variables still win over both.
+    import: optional:file:.env[.properties],optional:file:../../.env[.properties]
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:15432}/${POSTGRES_DB:seatlock}
+    # This service's own role (spec §3): it owns schema inventory and has no rights anywhere else.
+    username: inventory_user
+    # No default on purpose, so startup fails fast if the password is missing.
+    password: ${INVENTORY_DB_PASSWORD}
+  flyway:
+    schemas: inventory
+    # flyway_schema_history lives in the service's own schema, owned by inventory_user.
+    default-schema: inventory
+    # The role isn't allowed to create schemas; the Postgres init script already did it.
+    create-schemas: false
 
 server:
   port: ${SERVER_PORT:8082}

@@ -12,4 +12,6 @@ Dockerfile.*  text eol=lf
 *.yaml        text eol=lf
 *.properties  text eol=lf
 *.md          text eol=lf
+# Read by Docker env_file and Spring; a CRLF checkout would leave '\r' at the end of every value.
+.env.example  text eol=lf
 mvnw.cmd      text eol=crlf

@@ -1,0 +1,45 @@
+# Local infrastructure for SeatLock (spec §3, §17).
+# Run from the repo root after `cp .env.example .env`:
+#   docker compose -f deploy/docker-compose.yml up -d
+name: seatlock
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    # env_file passes every key in .env into the container: POSTGRES_* for the image, and the
+    # per-service role passwords for the init script. No ${} interpolation, so .env can live at
+    # the repo root instead of next to this file.
+    env_file:
+      - path: ../.env
+        required: true
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      # Runs only when pg-data is empty. After changing the script: `docker compose ... down -v`.
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # -h localhost forces a TCP check. While init scripts run, the image starts a temporary
+      # server that listens on the unix socket only, so a socket check would report "ready"
+      # before the roles and schemas exist. TCP comes up only after init has finished.
+      test: ["CMD-SHELL", "pg_isready -h localhost -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pg-data:
+  redis-data:

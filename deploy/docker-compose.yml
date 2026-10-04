@@ -13,7 +13,10 @@ services:
       - path: ../.env
         required: true
     ports:
-      - "5432:5432"
+      # Host port 15432, not 5432: a native Windows Postgres or another project's container on
+      # 5432/5433 would take localhost connections and fail with "password authentication failed".
+      # Services default to DB_PORT=15432. Containers on the compose network still use 5432.
+      - "15432:5432"
     volumes:
       - pg-data:/var/lib/postgresql/data
       # Runs only when pg-data is empty. After changing the script: `docker compose ... down -v`.
@@ -31,7 +34,8 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      # Same reason as Postgres: an uncommon host port avoids clashing with other local Redis.
+      - "16379:6379"
     volumes:
       - redis-data:/data
     healthcheck:

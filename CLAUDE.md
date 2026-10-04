@@ -27,6 +27,9 @@ provable claims and honest trade-offs matter more than features.
 - Errors are RFC 7807 problem+json with a stable "code" field (spec §18).
 
 ## Commands
+- Install modules to ~/.m2 (needed before `-pl` without `-am`, e.g. spring-boot:run):
+  ./mvnw install -DskipTests
+- Run one service: ./mvnw -pl services/<name> spring-boot:run
 - Build + unit tests: ./mvnw -q verify -DskipITs
 - One module: ./mvnw -q -pl services/<name> -am verify
 - Everything incl. Testcontainers (needs Docker): ./mvnw verify

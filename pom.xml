@@ -38,6 +38,14 @@
                 <artifactId>common</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <!-- Shared test fixtures (SeatLockPostgres) published from libs/common's test sources. -->
+            <dependency>
+                <groupId>com.seatlock</groupId>
+                <artifactId>common</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -69,6 +77,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <!-- Lets ITs find deploy/postgres/init, whichever module they run in. -->
+                        <seatlock.repo.root>${maven.multiModuleProjectDirectory}</seatlock.repo.root>
+                    </systemPropertyVariables>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

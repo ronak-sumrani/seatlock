@@ -33,7 +33,9 @@ provable claims and honest trade-offs matter more than features.
 - Build + unit tests: ./mvnw -q verify -DskipITs
 - One module: ./mvnw -q -pl services/<name> -am verify
 - Everything incl. Testcontainers (needs Docker): ./mvnw verify
+- First time: cp .env.example .env (gitignored; DB credentials for Compose and services)
 - Local stack: docker compose -f deploy/docker-compose.yml up -d
+  (Postgres on host port 15432, Redis on 16379; after editing deploy/postgres/init: down -v)
 - Format: ./mvnw spotless:apply
 
 ## Workflow

@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: inventory-service
+  threads:
+    virtual:
+      # Blocking Spring MVC on virtual threads (spec §3): Tomcat runs each request on a virtual thread,
+      # so blocking JDBC/HTTP calls park cheaply instead of tying up a platform thread.
+      enabled: true
+
+server:
+  port: ${SERVER_PORT:8082}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      # Adds /actuator/health/liveness and /readiness for Compose healthchecks later.
+      probes:
+        enabled: true

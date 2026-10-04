@@ -2,7 +2,16 @@
 
 ## Phase 0
 
-- [ ] 
+- [x] Step 0.1 Maven multi-module monorepo (2026-10-05): Maven wrapper (3.9.16, only-script), Spring Boot
+      3.5.16 parent, Java 21. Modules: `libs/common`, `services/user-catalog-service` (:8081),
+      `services/inventory-service` (:8082), `services/booking-service` (:8083). Each service has
+      actuator health (+ liveness/readiness probes), virtual threads on, and one smoke test that
+      checks health is UP and that Boot's Tomcat virtual-thread customizer is active.
+      Spotless (Palantir Java Format) `check` runs in `verify`; enforcer requires JDK 21 / Maven 3.9;
+      failsafe runs `*IT` tests so `-DskipITs` works.
+      Acceptance verified: `./mvnw -q verify` and `./mvnw spotless:check` pass; distinct ports; after
+      `./mvnw install -DskipTests`, `./mvnw -pl services/inventory-service spring-boot:run` serves
+      `/actuator/health` = UP (all three service jars also checked UP on 8081/8082/8083).
 
 ## v0.1
 
